@@ -8,13 +8,15 @@ from torchaudio.transforms import MelSpectrogram, Resample, Spectrogram, Amplitu
 
 # Create a dataset class
 class VocalsDataset(Dataset):
-    def __init__(self, root_dir, transform=None, segment_length=44100*10):
+    def __init__(self, root_dir, transform=None, segment_length=44100 * 10):
         self.root_dir = root_dir
         self.transform = (
             transform  # In case we want to apply a transform to the waveform
         )
         self.file_names = os.listdir(root_dir)
-        self.file_names = [f for f in self.file_names if f.endswith(".wav") or f.endswith(".mp3")]
+        self.file_names = [
+            f for f in self.file_names if f.endswith(".wav") or f.endswith(".mp3")
+        ]
 
         self.segment_length = segment_length
 
@@ -44,7 +46,7 @@ class VocalsDataset(Dataset):
             # pad with zeros
             zeros = torch.zeros(1, self.segment_length - waveform.shape[1])
             waveform = torch.cat((waveform, zeros), dim=1)
-        
+
         # if stereo, convert to mono
         if waveform.shape[0] == 2:
             waveform = torch.mean(waveform, dim=0, keepdim=True)
