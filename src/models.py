@@ -119,14 +119,22 @@ class Discriminator(nn.Module):
 
         model = [self.conv1, self.leaky_relu, self.conv2, self.bn2, self.leaky_relu]
         self.model = nn.Sequential(*model)
+
+        # Resulting size
+        # Input size is [128 (frequency bins) x 862 (time frames for 10 seconds segment)]
+        # After two 4x4 convolutions with stride 2, height/width is halved twice
+        # If more layers are added, this needs to be updated.
+        freq_dim = 128 // 4  # Reduced by two conv layers with stride 2
+        time_dim = 862 // 4   # T should be the number of time frames in the 10 seconds segment after MelSpectrogram
+        
+        flattened_dim = (input_dim * 2) * freq_dim * time_dim
         
         # Apply linear layer to get final outputs
-        self.fc_real_fake = nn.Linear(input_dim *8*8, 1) # Real or fake
-        self.fc_domain = nn.Linear(input_dim *8*8, 1) # Murga or non-murga
+        self.fc_real_fake = nn.Linear(flattened_dim, 1) # Real or fake
+        self.fc_domain = nn.Linear(flattened_dim, 1) # Murga or non-murga
 
     def forward(self, x):
         x = self.model(x)
         x = x.view(x.shape[0], -1)
         return self.fc_real_fake(x), self.fc_domain(x)
 
-        
