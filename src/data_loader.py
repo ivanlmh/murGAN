@@ -14,7 +14,7 @@ class VocalsDataset(Dataset):
             transform  # In case we want to apply a transform to the waveform
         )
         self.file_names = os.listdir(root_dir)
-        self.file_names = [f for f in self.file_names if f.endswith(".wav")]
+        self.file_names = [f for f in self.file_names if f.endswith(".wav") or f.endswith(".mp3")]
 
         self.segment_length = segment_length
 
@@ -30,6 +30,10 @@ class VocalsDataset(Dataset):
         file_name = self.file_names[idx]
         file_path = os.path.join(self.root_dir, file_name)
         waveform, sample_rate = torchaudio.load(file_path)
+        if sample_rate != 44100:
+            resample = Resample(orig_freq=sample_rate, new_freq=44100)
+            waveform = resample(waveform)
+            sample_rate = 44100
 
         # get a random segment of the waveform
         if waveform.shape[1] > self.segment_length:
@@ -51,7 +55,7 @@ class VocalsDataset(Dataset):
         if self.transform:
             waveform = self.transform(waveform)
 
-        return waveform, sample_rate
+        return waveform
 
 
 # Preprocessing

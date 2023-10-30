@@ -19,7 +19,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Create data loaders
 murga_data_loader = create_data_loader(root_dir="data/murga", batch_size=batch_size, shuffle=True, num_workers=0)
-classical_data_loader = create_data_loader(root_dir="data/classical", batch_size=batch_size, shuffle=True, num_workers=0)
+classical_data_loader = create_data_loader(root_dir="data/classic", batch_size=batch_size, shuffle=True, num_workers=0)
 
 # Initialize models
 generator = Generator().to(device)
