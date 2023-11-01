@@ -16,7 +16,7 @@ class DataLoaderTest(unittest.TestCase):
     def test_mel_spectrogram_transform(self):
         transform = MelSpectrogramTransform()
         dataset = VocalsDataset(root_dir=ROOT_DIR)
-        waveform, sample_rate = dataset[0]
+        waveform = dataset[0]
         mel_spectrogram = transform(waveform)
         # self.assertEqual(mel_spectrogram, VocalsDataset(root_dir=ROOT_DIR, transform=transform)[0][0])
         self.assertEqual(len(mel_spectrogram.shape), 3)

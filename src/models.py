@@ -1,6 +1,13 @@
 import torch.nn as nn
 import torch.nn.functional as F
 
+# --------------------
+# StarGAN-like model for domain transfer
+# Just a basic adaptation that steals the idea of training the
+# discriminator for both real/fake and domain classification
+# Original paper: https://arxiv.org/pdf/1711.09020.pdf
+# --------------------
+
 
 # Define ResNet-like blocks
 class ResidualBlock(nn.Module):
